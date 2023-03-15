@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:iman/views/Home/homepage.dart';
-import 'package:iman/views/Login/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../core/models/user.dart';
 
 class Welcome_Screen extends StatefulWidget {
   static String id = 'welcome_screen';
@@ -15,10 +16,11 @@ class Welcome_Screen extends StatefulWidget {
 class _Welcome_ScreenState extends State<Welcome_Screen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  Response? _response;
   String? _token;
-  void login(String email, password) async {
+  void login(User user) async {
     try {
-      final body = {"email": email, "password": password};
+      final body = user.toJson();
       final response = await http.post(
           Uri.parse('http://14.161.18.75:5105/auth/login'),
           body: jsonEncode(body),
@@ -28,6 +30,9 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
           });
       final responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        setState(() {
+          _response = Response.fromJson(responseData);
+        });
         print(response.body);
         print('Sucessfully');
         pageRoute(responseData['data']['token']);
@@ -51,7 +56,6 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    login(emailController.text.toString(), passwordController.text.toString());
   }
 
   Widget build(BuildContext context) {
@@ -132,8 +136,11 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                   minWidth: 400.0,
                   height: 40.0,
                   onPressed: () {
-                    login(emailController.text.toString(),
-                        passwordController.text.toString());
+                    final logins = User(
+                      email: emailController.text.toString(),
+                      password: passwordController.text.toString(),
+                    );
+                    login(logins);
                   },
                   child: const Text(
                     'Đăng Nhập',
@@ -149,9 +156,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
               ),
               Center(
                   child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, Register_Screen.id);
-                },
+                onTap: () {},
                 child: const Text('Quên Mật Khẩu ?',
                     style: TextStyle(color: Color.fromRGBO(2, 153, 155, 1))),
               ))

@@ -29,50 +29,51 @@ class _HomePageState extends State<HomePage> {
 
   Future getCred() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() async {
-      token = pref.getString("login")!;
-      print('token nè ${token}');
-      final body = {
-        "pageNumber": 0,
-        "pageSize": 0,
-        "orderBy": "",
-        "isDropdown": true,
-        "searchValue": "",
-        "searchText": "",
-        "searchCategory": "",
-        "searchCategoryName": "",
-        "searchEmployee": "",
-        "searchEmployeeName": ""
-      };
-      print('ác quỷ nè $token');
-      final response = await http.post(
-          Uri.parse('http://14.161.18.75:5105/equipment/allEquipment'),
-          headers: {
-            'Content-Type': 'application/json',
-            'accept': '*/*',
-            'Authorization': 'Bearer $token',
-          },
-          body: jsonEncode(body));
-      if (response.statusCode == 200) {
-        print(response.body);
-        final data = jsonDecode(response.body)['data'] as Map;
-        final result = data['data'] as List;
-
-        print(result);
-        print('OK chưa');
-      } else {
-        print('Error');
-      }
-    });
+    String token = pref.getString("login")!;
+    print('token nè $token');
+    final body = {
+      "pageNumber": 0,
+      "pageSize": 0,
+      "orderBy": "",
+      "isDropdown": true,
+      "searchValue": "",
+      "searchText": "",
+      "searchCategory": "",
+      "searchCategoryName": "",
+      "searchEmployee": "",
+      "searchEmployeeName": ""
+    };
+    await fetchEquipmentData(token, body);
   }
 
-  fetchEquipment() async {}
+  Future<void> fetchEquipmentData(
+      String token, Map<String, dynamic> body) async {
+    final response = await http.post(
+        Uri.parse('http://14.161.18.75:5105/equipment/allEquipment'),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': '*/*',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(body));
+    if (response.statusCode == 200) {
+      print(response.body);
+      final data = jsonDecode(response.body)['data'] as Map;
+      final result = data['data'] as List;
+      print(result);
+      print('OK chưa');
+    } else {
+      print('Error');
+    }
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Center(child: Text('Báo cáo sự cố thiết bị')),
+        title: const Padding(
+            padding: EdgeInsets.only(right: 20, left: 20),
+            child: Text('Báo cáo sự cố thiết bị')),
         backgroundColor: Colors.teal,
       ),
       body: Padding(

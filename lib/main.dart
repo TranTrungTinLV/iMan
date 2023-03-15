@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iman/views/Home/homepage.dart';
-import 'package:iman/views/Login/register.dart';
-import 'package:iman/views/WelcomeSreen/welcome_screen.dart';
+import 'package:iman/views/Register/register.dart';
+import 'package:iman/views/Login/welcome_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       initialRoute: Welcome_Screen.id,
       routes: {
         Welcome_Screen.id: (context) => Welcome_Screen(),
-        HomePage.id: (context) => const HomePage(),
-        Register_Screen.id: (context) => const Register_Screen(),
+        HomePage.id: (context) => HomePage(),
+        Register_Screen.id: (context) => Register_Screen(),
       },
     );
   }

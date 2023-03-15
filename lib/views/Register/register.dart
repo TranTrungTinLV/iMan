@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Register_Screen extends StatefulWidget {
-  static String id = "Register_Screen";
+  static String id = "register_Screen";
   const Register_Screen({super.key});
 
   @override
