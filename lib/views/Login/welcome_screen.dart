@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:iman/core/services/welcom_services.dart';
 import 'package:iman/views/Home/homepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,24 +21,16 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
   String? _token;
   void login(User user) async {
     try {
-      final body = user.toJson();
-      final response = await http.post(
-          Uri.parse('http://14.161.18.75:5105/auth/login'),
-          body: jsonEncode(body),
-          headers: {
-            'Content-Type': 'application/json',
-            'accept': '*/*',
-          });
-      final responseData = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        setState(() {
-          _response = Response.fromJson(responseData);
-        });
-        print(response.body);
-        print('Sucessfully');
-        pageRoute(responseData['data']['token']);
+      final auth = Networking();
+      final response = await auth.login(user);
+      final token = response.token;
+      if (token != null) {
+        final pref = await SharedPreferences.getInstance();
+        await pref.setString("login", token);
+        Navigator.pushNamed(context, HomePage.id);
       } else {
-        print('Error');
+        // handle null token
+        print('Token not found in response');
       }
     } catch (e) {
       print(e);
