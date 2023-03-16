@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iman/core/services/welcom_services.dart';
 import 'package:iman/views/Home/homepage.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/models/user.dart';

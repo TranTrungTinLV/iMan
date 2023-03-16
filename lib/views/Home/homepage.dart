@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:iman/views/Home/component/camera/save_camera.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'component/camera/camera.dart';
@@ -67,6 +64,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,

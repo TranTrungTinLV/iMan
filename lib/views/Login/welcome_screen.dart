@@ -1,16 +1,13 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:iman/core/services/welcom_services.dart';
 import 'package:iman/providers/welcome_provider.dart';
-import 'package:iman/views/Home/homepage.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import '../../core/models/user.dart';
 
 class Welcome_Screen extends StatefulWidget {
   static String id = 'welcome_screen';
+
+  const Welcome_Screen({super.key});
   @override
   _Welcome_ScreenState createState() => _Welcome_ScreenState();
 }
@@ -24,6 +21,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<User_Provider>(context, listen: false);
     return Scaffold(
@@ -34,7 +32,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
+              SizedBox(
                 height: 100.0,
                 child: Image.asset('image/logo.png'),
               ),
@@ -64,7 +62,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
               const SizedBox(
                 height: 30,
               ),
-              Consumer<User_Provider>(builder: (context, User_Provider, _) {
+              Consumer<User_Provider>(builder: (context, userProvider, _) {
                 return TextField(
                   controller: emailController,
                   onChanged: (newValue) {},
@@ -83,7 +81,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                 height: 35,
               ),
               Consumer<User_Provider>(
-                builder: (context, User_Provider, child) {
+                builder: (context, userProvider, child) {
                   return TextField(
                     controller: passwordController,
                     onChanged: (newValue) {},
@@ -105,7 +103,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
               ),
               Material(
                 child: Consumer<User_Provider>(
-                  builder: (context, User_Provider, child) {
+                  builder: (context, userProvider, child) {
                     return MaterialButton(
                       elevation: 4,
                       color: const Color.fromRGBO(238, 99, 44, 1),

@@ -31,8 +31,8 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {
-      'email': this.email,
-      'password': this.password,
+      'email': email,
+      'password': password,
     };
     return data;
   }

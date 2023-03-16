@@ -1,13 +1,12 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:iman/core/models/user.dart';
 import 'package:iman/core/services/equipment_services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class MyTextFeild_1 extends StatefulWidget {
   bool isSelected = false;
+
+  MyTextFeild_1({super.key});
 
   @override
   State<MyTextFeild_1> createState() => _MyTextFeild_1State();
@@ -34,6 +33,7 @@ class _MyTextFeild_1State extends State<MyTextFeild_1> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -49,8 +49,8 @@ class _MyTextFeild_1State extends State<MyTextFeild_1> {
           value: _selected,
           items: convertlistString(_list).map((e) {
             return DropdownMenuItem(
-              child: new Text(e),
               value: e.toString(),
+              child: Text(e),
             );
           }).toList(),
           onChanged: (String? val) {
