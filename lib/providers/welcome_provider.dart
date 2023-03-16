@@ -7,6 +7,9 @@ import '../core/models/user.dart';
 
 class User_Provider with ChangeNotifier {
   String? _token;
+  late String email;
+  String password = ' ';
+  bool isButtonEnabled = false;
   void login(User user, context) async {
     try {
       final auth = Networking();
@@ -38,5 +41,10 @@ class User_Provider with ChangeNotifier {
     _token = pref.getString('login');
     notifyListeners();
     return _token;
+  }
+
+  void checkbutton(String password, String email) {
+    isButtonEnabled = email.length >= 3 && password.length >= 3;
+    notifyListeners();
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:iman/providers/welcome_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,11 +14,25 @@ class Welcome_Screen extends StatefulWidget {
 class _Welcome_ScreenState extends State<Welcome_Screen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isButtonEnabled = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
+
+  // void checkbutton(String newValue) {
+  //   if (emailController.text.length >= 3 &&
+  //       passwordController.text.length >= 3) {
+  //     setState(() {
+  //       isButtonEnabled = true;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isButtonEnabled = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +78,9 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
               Consumer<User_Provider>(builder: (context, userProvider, _) {
                 return TextField(
                   controller: emailController,
-                  onChanged: (newValue) {},
+                  onChanged: (newValue) {
+                    userProvider.checkbutton(newValue,emailController.text);
+                  },
                   decoration: const InputDecoration(
                       hintText: 'service@vndigitech.com',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -84,7 +99,9 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                 builder: (context, userProvider, child) {
                   return TextField(
                     controller: passwordController,
-                    onChanged: (newValue) {},
+                    onChanged: (newValue) {
+                      userProvider.checkbutton(newValue, passwordController.text);
+                    },
                     obscureText: true,
                     decoration: const InputDecoration(
                         hintText: '******',
@@ -106,7 +123,9 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                   builder: (context, userProvider, child) {
                     return MaterialButton(
                       elevation: 4,
-                      color: const Color.fromRGBO(238, 99, 44, 1),
+                      color: userProvider.isButtonEnabled
+                          ? Color.fromRGBO(238, 99, 44, 1)
+                          : Colors.grey,
                       minWidth: 400.0,
                       height: 40.0,
                       onPressed: () async {
@@ -114,6 +133,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                             email: emailController.text.toString(),
                             password: passwordController.text.toString());
                         userProvider.login(logins, context);
+                  
                       },
                       child: const Text(
                         'Đăng Nhập',
