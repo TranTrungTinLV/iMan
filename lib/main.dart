@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iman/providers/welcome_provider.dart';
 import 'package:iman/views/Home/homepage.dart';
 import 'package:iman/views/Register/register.dart';
 import 'package:iman/views/Login/welcome_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
+  Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -18,14 +21,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Welcome_Screen.id,
-      routes: {
-        Welcome_Screen.id: (context) => Welcome_Screen(),
-        HomePage.id: (context) => HomePage(),
-        Register_Screen.id: (context) => Register_Screen(),
-      },
+    return ChangeNotifierProvider(
+      create: (context) => User_Provider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: Welcome_Screen.id,
+        routes: {
+          Welcome_Screen.id: (context) => Welcome_Screen(),
+          HomePage.id: (context) => HomePage(),
+          Register_Screen.id: (context) => Register_Screen(),
+        },
+      ),
     );
   }
 }

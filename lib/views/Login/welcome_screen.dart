@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:iman/core/services/welcom_services.dart';
+import 'package:iman/providers/welcome_provider.dart';
 import 'package:iman/views/Home/homepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:provider/provider.dart';
 import '../../core/models/user.dart';
 
 class Welcome_Screen extends StatefulWidget {
@@ -17,34 +18,6 @@ class Welcome_Screen extends StatefulWidget {
 class _Welcome_ScreenState extends State<Welcome_Screen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  Response? _response;
-  String? _token;
-  void login(User user) async {
-    try {
-      final auth = Networking();
-      final response = await auth.login(user);
-      final token = response.token;
-      if (token != null) {
-        final pref = await SharedPreferences.getInstance();
-        await pref.setString("login", token);
-        Navigator.pushNamed(context, HomePage.id);
-      } else {
-        // handle null token
-        print('Token not found in response');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void pageRoute(String token) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString("login", token);
-    setState(() {
-      Navigator.pushNamed(context, HomePage.id);
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -52,6 +25,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
   }
 
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<User_Provider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -90,58 +64,68 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
               const SizedBox(
                 height: 30,
               ),
-              TextField(
-                controller: emailController,
-                onChanged: (newValue) {},
-                decoration: const InputDecoration(
-                    hintText: 'service@vndigitech.com',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ))),
-              ),
+              Consumer<User_Provider>(builder: (context, User_Provider, _) {
+                return TextField(
+                  controller: emailController,
+                  onChanged: (newValue) {},
+                  decoration: const InputDecoration(
+                      hintText: 'service@vndigitech.com',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ))),
+                );
+              }),
               const SizedBox(
                 height: 35,
               ),
-              TextField(
-                controller: passwordController,
-                onChanged: (newValue) {},
-                decoration: const InputDecoration(
-                    hintText: '******',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ))),
+              Consumer<User_Provider>(
+                builder: (context, User_Provider, child) {
+                  return TextField(
+                    controller: passwordController,
+                    onChanged: (newValue) {},
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                        hintText: '******',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ))),
+                  );
+                },
               ),
               const SizedBox(
                 height: 40,
               ),
               Material(
-                child: MaterialButton(
-                  elevation: 4,
-                  color: const Color.fromRGBO(238, 99, 44, 1),
-                  minWidth: 400.0,
-                  height: 40.0,
-                  onPressed: () {
-                    final logins = User(
-                      email: emailController.text.toString(),
-                      password: passwordController.text.toString(),
+                child: Consumer<User_Provider>(
+                  builder: (context, User_Provider, child) {
+                    return MaterialButton(
+                      elevation: 4,
+                      color: const Color.fromRGBO(238, 99, 44, 1),
+                      minWidth: 400.0,
+                      height: 40.0,
+                      onPressed: () async {
+                        final logins = User(
+                            email: emailController.text.toString(),
+                            password: passwordController.text.toString());
+                        userProvider.login(logins, context);
+                      },
+                      child: const Text(
+                        'Đăng Nhập',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontSize: 17),
+                      ),
                     );
-                    login(logins);
                   },
-                  child: const Text(
-                    'Đăng Nhập',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        fontSize: 17),
-                  ),
                 ),
               ),
               const SizedBox(

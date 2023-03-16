@@ -14,7 +14,7 @@ class Icon_camera extends StatefulWidget {
 class _Icon_cameraState extends State<Icon_camera> {
   List<File> photos = [];
   final ImagePicker _picker = ImagePicker();
-  File? _image;
+  File? _image; 
   chooseFile() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
